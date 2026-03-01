@@ -24,7 +24,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(180deg, #0a0e27 0%, #1a1d3a 50%, #2d1b4e 100%);
+    background: #0a0e27;
     min-height: 100vh;
     padding-top: 70px;
     padding-bottom: 40px;
@@ -32,183 +32,49 @@ body {
     overflow-x: hidden;
 }
 
-/* Space Background Elements */
-.space-bg {
+/* Video Background */
+.video-background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: 0;
-    pointer-events: none;
     overflow: hidden;
 }
 
-/* Stars (tiny dots) */
-.star {
+.video-background video {
     position: absolute;
-    width: 2px;
-    height: 2px;
-    background: white;
-    border-radius: 50%;
-    opacity: 0.8;
-    animation: twinkle 3s infinite;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
 }
 
-@keyframes twinkle {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 0.2; }
-}
-
-/* Generate random positions for stars */
-.star:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
-.star:nth-child(2) { top: 20%; left: 40%; animation-delay: 0.5s; }
-.star:nth-child(3) { top: 15%; left: 60%; animation-delay: 1s; }
-.star:nth-child(4) { top: 30%; left: 80%; animation-delay: 1.5s; }
-.star:nth-child(5) { top: 40%; left: 10%; animation-delay: 2s; }
-.star:nth-child(6) { top: 50%; left: 30%; animation-delay: 0.3s; }
-.star:nth-child(7) { top: 60%; left: 50%; animation-delay: 0.8s; }
-.star:nth-child(8) { top: 70%; left: 70%; animation-delay: 1.3s; }
-.star:nth-child(9) { top: 80%; left: 90%; animation-delay: 1.8s; }
-.star:nth-child(10) { top: 5%; left: 45%; animation-delay: 2.3s; }
-.star:nth-child(11) { top: 25%; left: 65%; animation-delay: 0.2s; }
-.star:nth-child(12) { top: 35%; left: 85%; animation-delay: 0.7s; }
-.star:nth-child(13) { top: 45%; left: 15%; animation-delay: 1.2s; }
-.star:nth-child(14) { top: 55%; left: 35%; animation-delay: 1.7s; }
-.star:nth-child(15) { top: 65%; left: 55%; animation-delay: 2.2s; }
-.star:nth-child(16) { top: 75%; left: 75%; animation-delay: 0.4s; }
-.star:nth-child(17) { top: 85%; left: 25%; animation-delay: 0.9s; }
-.star:nth-child(18) { top: 12%; left: 50%; animation-delay: 1.4s; }
-.star:nth-child(19) { top: 22%; left: 70%; animation-delay: 1.9s; }
-.star:nth-child(20) { top: 32%; left: 5%; animation-delay: 2.4s; }
-
-/* Shooting Stars */
-.shooting-star {
+/* Dark overlay on video for better readability */
+.video-overlay {
     position: absolute;
-    width: 2px;
-    height: 2px;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 10px 2px rgba(255,255,255,0.8);
-    animation: shoot 3s linear infinite;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
 }
 
-@keyframes shoot {
-    0% {
-        transform: translateX(0) translateY(0);
-        opacity: 1;
-    }
-    70% {
-        opacity: 1;
-    }
-    100% {
-        transform: translateX(-300px) translateY(300px);
-        opacity: 0;
-    }
+/* Ensure content is above video */
+.container {
+    position: relative;
+    z-index: 2;
 }
 
-.shooting-star:nth-child(21) { top: 10%; left: 80%; animation-delay: 2s; animation-duration: 2s; }
-.shooting-star:nth-child(22) { top: 30%; left: 90%; animation-delay: 5s; animation-duration: 2.5s; }
-.shooting-star:nth-child(23) { top: 50%; left: 85%; animation-delay: 8s; animation-duration: 3s; }
-.shooting-star:nth-child(24) { top: 20%; left: 70%; animation-delay: 11s; animation-duration: 2.2s; }
-.shooting-star:nth-child(25) { top: 40%; left: 95%; animation-delay: 14s; animation-duration: 2.8s; }
-
-/* Sun */
-.sun {
-    position: absolute;
-    top: 10%;
-    right: 10%;
-    width: 80px;
-    height: 80px;
-    background: radial-gradient(circle, #ffd700 0%, #ff8c00 100%);
-    border-radius: 50%;
-    box-shadow: 0 0 40px rgba(255,215,0,0.6), 0 0 80px rgba(255,140,0,0.4);
-    animation: pulse-sun 4s ease-in-out infinite;
-}
-
-@keyframes pulse-sun {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 40px rgba(255,215,0,0.6), 0 0 80px rgba(255,140,0,0.4);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 60px rgba(255,215,0,0.8), 0 0 100px rgba(255,140,0,0.6);
-    }
-}
-
-/* Moon */
-.moon {
-    position: absolute;
-    bottom: 15%;
-    left: 8%;
-    width: 60px;
-    height: 60px;
-    background: radial-gradient(circle at 30% 30%, #f8f8f8 0%, #c0c0c0 100%);
-    border-radius: 50%;
-    box-shadow: 0 0 30px rgba(248,248,248,0.5), inset -10px -10px 20px rgba(0,0,0,0.1);
-    animation: float-moon 6s ease-in-out infinite;
-}
-
-@keyframes float-moon {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-15px);
-    }
-}
-
-/* Planets (Mini Solar System) */
-.planet {
-    position: absolute;
-    border-radius: 50%;
-    animation: orbit 20s linear infinite;
-}
-
-.planet-1 {
-    top: 25%;
-    left: 15%;
-    width: 20px;
-    height: 20px;
-    background: radial-gradient(circle, #ff6b6b 0%, #c92a2a 100%);
-    box-shadow: 0 0 15px rgba(255,107,107,0.5);
-    animation: orbit-1 15s linear infinite;
-}
-
-@keyframes orbit-1 {
-    0% { transform: rotate(0deg) translateX(40px) rotate(0deg); }
-    100% { transform: rotate(360deg) translateX(40px) rotate(-360deg); }
-}
-
-.planet-2 {
-    top: 45%;
-    right: 20%;
-    width: 25px;
-    height: 25px;
-    background: radial-gradient(circle, #4dabf7 0%, #1971c2 100%);
-    box-shadow: 0 0 20px rgba(77,171,247,0.6);
-    animation: orbit-2 25s linear infinite reverse;
-}
-
-@keyframes orbit-2 {
-    0% { transform: rotate(0deg) translateX(50px) rotate(0deg); }
-    100% { transform: rotate(360deg) translateX(50px) rotate(-360deg); }
-}
-
-.planet-3 {
-    bottom: 30%;
-    right: 15%;
-    width: 18px;
-    height: 18px;
-    background: radial-gradient(circle, #a78bfa 0%, #7c3aed 100%);
-    box-shadow: 0 0 15px rgba(167,139,250,0.5);
-    animation: orbit-3 18s linear infinite;
-}
-
-@keyframes orbit-3 {
-    0% { transform: rotate(0deg) translateX(35px) rotate(0deg); }
-    100% { transform: rotate(360deg) translateX(35px) rotate(-360deg); }
+.top-nav {
+    position: relative;
+    z-index: 100;
 }
 
 .container {
@@ -1931,17 +1797,13 @@ textarea:focus {
 }
 
 .ai-card-content p {
-  font-size: 0.875rem;
-  line-height: 1.5;
-
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-
-  -webkit-line-clamp: 3;
-  line-clamp: 3; /* versi standard */
-
-  overflow: hidden;
-  text-overflow: ellipsis;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Trend Chart Small */

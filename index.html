@@ -8,47 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <!-- Space Background -->
-    <div class="space-bg">
-        <!-- Stars -->
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        
-        <!-- Shooting Stars -->
-        <div class="shooting-star"></div>
-        <div class="shooting-star"></div>
-        <div class="shooting-star"></div>
-        <div class="shooting-star"></div>
-        <div class="shooting-star"></div>
-        
-        <!-- Sun -->
-        <div class="sun"></div>
-        
-        <!-- Moon -->
-        <div class="moon"></div>
-        
-        <!-- Planets -->
-        <div class="planet planet-1"></div>
-        <div class="planet planet-2"></div>
-        <div class="planet planet-3"></div>
+    <!-- Video Background -->
+    <div class="video-background">
+        <video autoplay muted loop playsinline id="bgVideo">
+            <source src="background.mp4" type="video/mp4">
+            <!-- Fallback gradient if video fails -->
+        </video>
+        <div class="video-overlay"></div>
     </div>
     <!-- Top Bar -->
     <nav class="top-nav glass-effect">
@@ -85,13 +51,7 @@
         <div class="summary-card glass-effect glow-card animate-slide-up">
             <div class="summary-header">
                 <h2>📊 Ringkasan Akademik</h2>
-                <div style="display: flex; gap: 12px; align-items: center;">
-                    <button onclick="showOverallAI()" class="btn-ai-overall">
-                        <i class="fa-solid fa-brain"></i>
-                        AI Insights
-                    </button>
-                    <div class="pulse-dot"></div>
-                </div>
+                <div class="pulse-dot"></div>
             </div>
             <div class="summary-grid">
                 <div class="summary-item highlight shine-effect">
