@@ -1,6 +1,8 @@
 // IPK Calculator - Complete Logic
 let semesters = [];
 let currentSemesterIndex = null;
+let expandedSemesters = {};
+let dashboardChartInstance = null;
 
 // Grade mapping
 const gradeMap = {
@@ -196,17 +198,28 @@ function calculateIPK() {
 // Get predikat
 function getPredikat(ipk) {
     if (ipk >= 3.75) return 'Cum Laude';
-    if (ipk >= 3.50) return 'Superior';
-    if (ipk >= 3.00) return 'gratify';
+    if (ipk >= 3.50) return 'Dengan Pujian';
+    if (ipk >= 3.00) return 'Memuaskan';
     if (ipk >= 2.00) return 'Lulus';
     if (ipk > 0) return 'Tidak Lulus';
-    return '-';
+    return '—';
 }
 
 // Render everything
 function render() {
     renderSummary();
     renderSemesters();
+    calculateQuickStats();
+    renderDashboardChart();
+}
+
+function getGPABadgeText(ipk) {
+    if (ipk >= 3.75) return 'Excellent';
+    if (ipk >= 3.50) return 'Very Good';
+    if (ipk >= 3.00) return 'Good';
+    if (ipk >= 2.00) return 'Satisfactory';
+    if (ipk > 0) return 'Needs Work';
+    return '—';
 }
 
 // Render summary card
@@ -217,6 +230,113 @@ function renderSummary() {
     document.getElementById('totalSKS').textContent = result.totalSKS;
     document.getElementById('totalSemesters').textContent = semesters.length;
     document.getElementById('predikat').textContent = result.predikat;
+
+    const gpaBadge = document.getElementById('gpaStatusBadge');
+    if (gpaBadge) {
+        const text = getGPABadgeText(parseFloat(result.ipk));
+        gpaBadge.textContent = text;
+        gpaBadge.className = 'kpi-badge';
+        if (text === 'Excellent' || text === 'Very Good') {
+            gpaBadge.style.backgroundColor = 'var(--success-light)';
+            gpaBadge.style.color = 'var(--success)';
+        } else if (text === 'Good') {
+            gpaBadge.style.backgroundColor = 'var(--accent-light)';
+            gpaBadge.style.color = 'var(--accent)';
+        } else if (text === 'Satisfactory') {
+            gpaBadge.style.backgroundColor = 'var(--warning-light)';
+            gpaBadge.style.color = 'var(--warning)';
+        } else if (text === 'Needs Work') {
+            gpaBadge.style.backgroundColor = 'var(--danger-light)';
+            gpaBadge.style.color = 'var(--danger)';
+        } else {
+            gpaBadge.style.backgroundColor = 'var(--accent-light)';
+            gpaBadge.style.color = 'var(--text-secondary)';
+        }
+    }
+}
+
+function toggleSemesterDetails(index) {
+    expandedSemesters[index] = !expandedSemesters[index];
+    renderSemesters();
+}
+
+function renderDashboardChart() {
+    const canvas = document.getElementById('ipChartDashboard');
+    if (!canvas) return;
+    
+    if (semesters.length === 0) {
+        if (dashboardChartInstance) {
+            dashboardChartInstance.destroy();
+            dashboardChartInstance = null;
+        }
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    const semesterLabels = semesters.map(s => `Sem ${s.number}`);
+    const ipData = semesters.map(s => parseFloat(s.ip));
+    
+    if (dashboardChartInstance) {
+        dashboardChartInstance.destroy();
+    }
+    
+    dashboardChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: semesterLabels,
+            datasets: [{
+                label: 'IP Semester',
+                data: ipData,
+                borderColor: '#1A365D',
+                backgroundColor: 'rgba(26, 54, 93, 0.05)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3,
+                pointRadius: 4,
+                pointBackgroundColor: '#1A365D',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 1.5,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1f2937',
+                    titleFont: { family: 'Inter', size: 12, weight: 'bold' },
+                    bodyFont: { family: 'Inter', size: 12 },
+                    padding: 8,
+                    cornerRadius: 4,
+                    displayColors: false
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { family: 'Inter', size: 11 }, color: '#6B7280' }
+                },
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 4.0,
+                    grid: { color: '#F3F4F6' },
+                    ticks: {
+                        stepSize: 1.0,
+                        font: { family: 'Inter', size: 11 },
+                        color: '#6B7280',
+                        callback: function(value) {
+                            return value.toFixed(1);
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 // Render semesters list
@@ -226,7 +346,7 @@ function renderSemesters() {
     
     if (semesters.length === 0) {
         container.innerHTML = '';
-        emptyState.style.display = 'block';
+        emptyState.style.display = 'flex';
         return;
     }
     
@@ -235,25 +355,37 @@ function renderSemesters() {
     let html = '';
     
     semesters.forEach((semester, index) => {
+        const ipNum = parseFloat(semester.ip);
+        const ipColor = ipNum >= 3.5 ? 'var(--success)' : ipNum >= 3.0 ? 'var(--accent)' : ipNum >= 2.0 ? 'var(--warning)' : 'var(--danger)';
+        const isExpanded = expandedSemesters[index] === true;
+        const detailsBtnHtml = isExpanded 
+            ? `<i class="fa-solid fa-chevron-up"></i> Hide Details` 
+            : `<i class="fa-solid fa-chevron-down"></i> View Details`;
+            
         html += `
             <div class="semester-card">
                 <div class="semester-header">
                     <div class="semester-title">
-                        <h3>📝 Semester ${semester.number}</h3>
+                        <div class="semester-number-badge">${semester.number}</div>
+                        <h3>Semester ${semester.number}</h3>
                     </div>
                     <div class="semester-stats">
                         <span>
                             <i class="fa-solid fa-chart-line"></i>
-                            IP: <span class="ip-value">${semester.ip}</span>
+                            IPS: <span class="ip-value" style="color:${ipColor}">${semester.ip}</span>
                         </span>
                         <span>
                             <i class="fa-solid fa-book"></i>
                             SKS: ${semester.totalSKS}
                         </span>
+                        <span>
+                            <i class="fa-solid fa-list"></i>
+                            MK: ${semester.courses.length}
+                        </span>
                     </div>
                     <div class="semester-actions">
-                        <button onclick="showSemesterAI(${index})" class="btn-small btn-ai">
-                            <i class="fa-solid fa-brain"></i> AI
+                        <button onclick="toggleSemesterDetails(${index})" class="btn-small" id="btn-details-${index}">
+                            ${detailsBtnHtml}
                         </button>
                         <button onclick="openCourseModal(${index})" class="btn-small btn-add">
                             <i class="fa-solid fa-plus"></i> Tambah MK
@@ -264,47 +396,75 @@ function renderSemesters() {
                     </div>
                 </div>
                 
-                ${semester.courses.length > 0 ? `
-                    <table class="courses-table">
-                        <thead>
-                            <tr>
-                                <th>Mata Kuliah</th>
-                                <th style="text-align: center;">SKS</th>
-                                <th style="text-align: center;">Nilai</th>
-                                <th style="text-align: center;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${semester.courses.map((course, courseIndex) => `
-                                <tr>
-                                    <td class="course-name">${course.name}</td>
-                                    <td style="text-align: center;">${course.sks}</td>
-                                    <td style="text-align: center;" class="course-grade">
-                                        ${course.gradeLetter} (${course.grade.toFixed(1)})
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <button onclick="deleteCourse(${index}, ${courseIndex})" class="btn-delete-course">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                ` : `
-                    <div class="empty-state" style="padding: 40px 20px;">
-                        <i class="fa-solid fa-book-open" style="font-size: 3rem;"></i>
-                        <p style="margin-top: 10px; color: var(--gray-500);">
-                            Belum ada mata kuliah. Klik "Tambah MK" untuk menambahkan.
-                        </p>
+                <!-- Collapsible details section -->
+                <div id="details-${index}" class="semester-details-content" style="display: ${isExpanded ? 'block' : 'none'};">
+                    ${(semester.note || semester.tags || semester.lesson) ? `
+                        <div class="semester-notes-display">
+                            ${semester.note ? `<div class="note-text">📝 ${semester.note}</div>` : ''}
+                            ${semester.tags && semester.tags.length > 0 ? `
+                                <div class="note-tags">
+                                    ${semester.tags.map(tag => `<span class="note-tag">#${tag}</span>`).join('')}
+                                </div>
+                            ` : ''}
+                            ${semester.lesson ? `<div class="note-lesson">💡 ${semester.lesson}</div>` : ''}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="semester-notes-action-row" style="margin-bottom: var(--sp-3); display: flex; gap: var(--sp-2);">
+                        <button onclick="openNotesModal(${index})" class="btn-small btn-notes">
+                            <i class="fa-solid fa-note-sticky"></i> Edit Notes
+                        </button>
+                        <button onclick="showSemesterAI(${index})" class="btn-small btn-ai">
+                            <i class="fa-solid fa-brain"></i> AI Analisis
+                        </button>
                     </div>
-                `}
+                    
+                    ${semester.courses.length > 0 ? `
+                        <table class="courses-table">
+                            <thead>
+                                <tr>
+                                    <th>Mata Kuliah</th>
+                                    <th style="text-align: center;">SKS</th>
+                                    <th style="text-align: center;">Nilai</th>
+                                    <th style="text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${semester.courses.map((course, courseIndex) => {
+                                    const g = course.grade;
+                                    const gc = g >= 3.5 ? 'grade-a' : g >= 2.5 ? 'grade-b' : g >= 1.5 ? 'grade-c' : 'grade-d';
+                                    return `
+                                    <tr>
+                                        <td class="course-name">${course.name}</td>
+                                        <td style="text-align: center;">${course.sks}</td>
+                                        <td style="text-align: center;" class="course-grade ${gc}">
+                                            ${course.gradeLetter} <span style="font-weight:400;font-size:0.8em;opacity:0.7;">(${course.grade.toFixed(1)})</span>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <button onclick="openEditCourseModal(${index}, ${courseIndex})" class="btn-delete-course" title="Edit" style="color: var(--info); margin-right: 4px;">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                            <button onclick="deleteCourse(${index}, ${courseIndex})" class="btn-delete-course" title="Hapus">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>`;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    ` : `
+                        <div class="empty-state" style="padding:16px;border:none;background:transparent;text-align:center;">
+                            <p class="empty-desc" style="font-size:0.8rem;color:var(--text-secondary);">Belum ada mata kuliah. Klik <strong>Tambah MK</strong> di atas.</p>
+                        </div>
+                    `}
+                </div>
             </div>
         `;
     });
     
     container.innerHTML = html;
 }
+
 
 // Theme toggle
 function toggleTheme() {
@@ -313,13 +473,15 @@ function toggleTheme() {
     const next = current === 'light' ? 'dark' : 'light';
     html.setAttribute('data-theme', next);
     localStorage.setItem('ipk_theme', next);
-    document.getElementById('themeIcon').className = next === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.className = next === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
 }
 
 function checkTheme() {
     const saved = localStorage.getItem('ipk_theme') || 'light';
     document.documentElement.setAttribute('data-theme', saved);
-    document.getElementById('themeIcon').className = saved === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.className = saved === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
 }
 
 // Export PDF
@@ -390,27 +552,20 @@ function resetAll() {
 
 // Show notification
 function showNotification(message, type = 'success') {
+    // Remove existing notifications
+    document.querySelectorAll('.notification').forEach(n => n.remove());
+
+    const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark';
     const notif = document.createElement('div');
     notif.className = `notification ${type}`;
-    notif.textContent = message;
-    notif.style.cssText = `
-        position: fixed;
-        top: 80px;
-        right: 20px;
-        background: ${type === 'success' ? '#10b981' : '#ef4444'};
-        color: white;
-        padding: 15px 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        z-index: 9999;
-        animation: slideIn 0.3s ease-out;
-    `;
-    
+    notif.innerHTML = `<i class="fa-solid ${icon}"></i> ${message}`;
     document.body.appendChild(notif);
     
     setTimeout(() => {
-        notif.style.animation = 'slideOut 0.3s ease-out';
-        setTimeout(() => notif.remove(), 300);
+        notif.style.opacity = '0';
+        notif.style.transform = 'translateX(100%)';
+        notif.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+        setTimeout(() => notif.remove(), 260);
     }, 3000);
 }
 
@@ -813,12 +968,30 @@ function toggleQuickStats() {
 
 function calculateQuickStats() {
     if (semesters.length === 0) {
-        alert('Belum ada data untuk ditampilkan!');
+        document.getElementById('highestIP').textContent = '0.00';
+        const hLabel = document.getElementById('highestIPLabel');
+        if (hLabel) hLabel.textContent = 'Semester —';
+
+        document.getElementById('lowestIP').textContent = '0.00';
+        const lLabel = document.getElementById('lowestIPLabel');
+        if (lLabel) lLabel.textContent = 'Semester —';
+
+        document.getElementById('avgIP').textContent = '0.00';
+        document.getElementById('totalA').textContent = '0';
+        const aPercent = document.getElementById('totalAPercent');
+        if (aPercent) aPercent.textContent = '0% dari total MK';
         return;
     }
     
     // Calculate stats
     const ips = semesters.map(s => parseFloat(s.ip)).filter(ip => ip > 0);
+    if (ips.length === 0) {
+        document.getElementById('highestIP').textContent = '0.00';
+        document.getElementById('lowestIP').textContent = '0.00';
+        document.getElementById('avgIP').textContent = '0.00';
+        document.getElementById('totalA').textContent = '0';
+        return;
+    }
     const highestIP = Math.max(...ips);
     const lowestIP = Math.min(...ips);
     const avgIP = (ips.reduce((a, b) => a + b, 0) / ips.length).toFixed(2);
@@ -840,10 +1013,22 @@ function calculateQuickStats() {
     const lowestSem = semesters.find(s => parseFloat(s.ip) === lowestIP);
     
     // Update display
-    document.getElementById('highestIP').textContent = `${highestIP} (Sem ${highestSem.number})`;
-    document.getElementById('lowestIP').textContent = `${lowestIP} (Sem ${lowestSem.number})`;
+    document.getElementById('highestIP').textContent = highestIP.toFixed(2);
+    if (highestSem) {
+        const hLabel = document.getElementById('highestIPLabel');
+        if (hLabel) hLabel.textContent = `Semester ${highestSem.number}`;
+    }
+    
+    document.getElementById('lowestIP').textContent = lowestIP.toFixed(2);
+    if (lowestSem) {
+        const lLabel = document.getElementById('lowestIPLabel');
+        if (lLabel) lLabel.textContent = `Semester ${lowestSem.number}`;
+    }
+    
     document.getElementById('avgIP').textContent = avgIP;
-    document.getElementById('totalA').textContent = `${totalA} (${percentA}%)`;
+    document.getElementById('totalA').textContent = totalA;
+    const aPercent = document.getElementById('totalAPercent');
+    if (aPercent) aPercent.textContent = `${percentA}% dari total MK`;
 }
 
 // ========================================
@@ -959,108 +1144,10 @@ function saveSemesterNotes() {
     showNotification('Catatan semester berhasil disimpan!', 'success');
 }
 
-// Update renderSemesters to include edit buttons and notes display
-const originalRenderSemesters = renderSemesters;
-renderSemesters = function() {
-    const container = document.getElementById('semestersList');
-    const emptyState = document.getElementById('emptyState');
-    
-    if (semesters.length === 0) {
-        container.innerHTML = '';
-        emptyState.style.display = 'block';
-        return;
-    }
-    
-    emptyState.style.display = 'none';
-    
-    let html = '';
-    
-    semesters.forEach((semester, index) => {
-        html += `
-            <div class="semester-card">
-                <div class="semester-header">
-                    <div class="semester-title">
-                        <h3>📝 Semester ${semester.number}</h3>
-                    </div>
-                    <div class="semester-stats">
-                        <span>
-                            <i class="fa-solid fa-chart-line"></i>
-                            IP: <span class="ip-value">${semester.ip}</span>
-                        </span>
-                        <span>
-                            <i class="fa-solid fa-book"></i>
-                            SKS: ${semester.totalSKS}
-                        </span>
-                    </div>
-                    <div class="semester-actions">
-                        <button onclick="openNotesModal(${index})" class="btn-small btn-notes">
-                            <i class="fa-solid fa-note-sticky"></i> Notes
-                        </button>
-                        <button onclick="openCourseModal(${index})" class="btn-small btn-add">
-                            <i class="fa-solid fa-plus"></i> Tambah MK
-                        </button>
-                        <button onclick="deleteSemester(${index})" class="btn-small btn-delete">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                ${(semester.note || semester.tags || semester.lesson) ? `
-                    <div class="semester-notes-display">
-                        ${semester.note ? `<div class="note-text">📝 ${semester.note}</div>` : ''}
-                        ${semester.tags && semester.tags.length > 0 ? `
-                            <div class="note-tags">
-                                ${semester.tags.map(tag => `<span class="note-tag">#${tag}</span>`).join('')}
-                            </div>
-                        ` : ''}
-                        ${semester.lesson ? `<div class="note-lesson">💡 ${semester.lesson}</div>` : ''}
-                    </div>
-                ` : ''}
-                
-                ${semester.courses.length > 0 ? `
-                    <table class="courses-table">
-                        <thead>
-                            <tr>
-                                <th>Mata Kuliah</th>
-                                <th style="text-align: center;">SKS</th>
-                                <th style="text-align: center;">Nilai</th>
-                                <th style="text-align: center;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${semester.courses.map((course, courseIndex) => `
-                                <tr>
-                                    <td class="course-name">${course.name}</td>
-                                    <td style="text-align: center;">${course.sks}</td>
-                                    <td style="text-align: center;" class="course-grade">
-                                        ${course.gradeLetter} (${course.grade.toFixed(1)})
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <button onclick="openEditCourseModal(${index}, ${courseIndex})" class="btn-delete-course" style="color: #3b82f6; margin-right: 8px;" title="Edit">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
-                                        <button onclick="deleteCourse(${index}, ${courseIndex})" class="btn-delete-course" title="Delete">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                ` : `
-                    <div class="empty-state" style="padding: 40px 20px;">
-                        <i class="fa-solid fa-book-open" style="font-size: 3rem;"></i>
-                        <p style="margin-top: 10px; color: var(--gray-500);">
-                            Belum ada mata kuliah. Klik "Tambah MK" untuk menambahkan.
-                        </p>
-                    </div>
-                `}
-            </div>
-        `;
-    });
-    
-    container.innerHTML = html;
-};
+// renderSemesters consolidated and override removed.
+
+
+
 
 // Call updated render on load
 render();
@@ -1128,16 +1215,16 @@ function renderCharts() {
             datasets: [{
                 label: 'IP per Semester',
                 data: ipData,
-                borderColor: '#6366f1',
-                backgroundColor: 'rgba(99,102,241,0.1)',
-                borderWidth: 3,
+                borderColor: '#4f46e5',
+                backgroundColor: 'rgba(79,70,229,0.08)',
+                borderWidth: 2.5,
                 fill: true,
-                tension: 0.4,
-                pointRadius: 6,
-                pointBackgroundColor: '#6366f1',
+                tension: 0.35,
+                pointRadius: 5,
+                pointBackgroundColor: '#4f46e5',
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2,
-                pointHoverRadius: 8
+                pointHoverRadius: 7
             }]
         },
         options: {
@@ -1146,28 +1233,33 @@ function renderCharts() {
             plugins: {
                 title: {
                     display: true,
-                    text: '📈 Progress IP per Semester',
-                    font: {
-                        size: 18,
-                        weight: 'bold'
-                    }
+                    text: 'IP Progress per Semester',
+                    font: { size: 13, weight: '700', family: 'Inter' },
+                    color: '#111827',
+                    padding: { bottom: 16 }
                 },
-                legend: {
-                    display: false
-                }
+                legend: { display: false }
             },
             scales: {
+                x: {
+                    grid: { color: '#f3f4f6' },
+                    ticks: { font: { size: 12, family: 'Inter' }, color: '#6b7280' }
+                },
                 y: {
                     beginAtZero: false,
                     min: 0,
                     max: 4.0,
+                    grid: { color: '#f3f4f6' },
                     ticks: {
-                        stepSize: 0.5
+                        stepSize: 0.5,
+                        font: { size: 12, family: 'Inter' },
+                        color: '#6b7280'
                     }
                 }
             }
         }
     });
+
     
     // Chart 2: Grade Distribution Bar Chart
     const ctx2 = document.getElementById('gradeChart').getContext('2d');

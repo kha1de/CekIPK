@@ -1,177 +1,247 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gradify - IPK Calculator</title>
+    <title>Cek IPK — Academic Analytics Advisor</title>
+    <meta name="description" content="Personal academic analytics advisor and GPA calculator for university students.">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Video Background -->
-    <div class="video-background">
-        <video autoplay muted loop playsinline id="bgVideo">
-            <source src="background.mp4" type="video/mp4">
-            <!-- Fallback gradient if video fails -->
-        </video>
-        <div class="video-overlay"></div>
-    </div>
-    <!-- Top Bar -->
-    <nav class="top-nav glass-effect">
-        <div class="container">
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="container nav-inner">
             <div class="nav-brand">
-                <i class="fa-solid fa-graduation-cap glow-icon"></i>
-                <h1 class="gradient-text animate-float">Gradify</h1>
+                <div class="brand-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">Cek IPK</span>
+                    <span class="brand-sub">Academic Hub</span>
+                </div>
             </div>
             <div class="nav-actions">
-                <button onclick="showCharts()" class="btn-icon glow-btn" title="Charts">
-                    <i class="fa-solid fa-chart-line"></i>
+                <button onclick="toggleTheme()" class="btn-nav" title="Ubah Tema">
+                    <i id="themeIcon" class="fa-solid fa-moon"></i>
                 </button>
-                <button onclick="showAchievements()" class="btn-icon glow-btn" title="Achievements">
+                <button onclick="showCharts()" class="btn-nav" title="Visualisasi Detil">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span>Detail Charts</span>
+                </button>
+                <button onclick="showAchievements()" class="btn-nav" title="Pencapaian & Medali">
                     <i class="fa-solid fa-trophy"></i>
+                    <span>Achievements</span>
                 </button>
-                <button onclick="showShareCard()" class="btn-icon glow-btn" title="Share">
-                    <i class="fa-solid fa-share-nodes"></i>
+                <button onclick="showShareCard()" class="btn-nav" title="Bagikan Progress">
+                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                    <span>Share Card</span>
                 </button>
-                <button onclick="exportPDF()" class="btn-icon glow-btn" title="Export PDF">
+                <button onclick="exportPDF()" class="btn-nav" title="Export Transkrip">
                     <i class="fa-solid fa-file-pdf"></i>
+                    <span>Export PDF</span>
                 </button>
-                <button onclick="resetAll()" class="btn-icon glow-btn" title="Reset Semua">
-                    <i class="fa-solid fa-rotate-right"></i>
+                <div class="nav-divider"></div>
+                <button onclick="resetAll()" class="btn-nav btn-nav-danger" title="Reset Semua Data">
+                    <i class="fa-solid fa-trash-can"></i>
                 </button>
             </div>
         </div>
     </nav>
 
-    <div class="container">
-        <!-- Summary Card -->
-        <div class="summary-card glass-effect glow-card animate-slide-up">
-            <div class="summary-header">
-                <h2>📊 Ringkasan Akademik</h2>
-                <div class="pulse-dot"></div>
-            </div>
-            <div class="summary-grid">
-                <div class="summary-item highlight shine-effect">
-                    <div class="summary-icon pulse-glow">
-                        <i class="fa-solid fa-chart-line"></i>
-                    </div>
-                    <div class="summary-content">
-                        <span class="summary-label">IPK Kumulatif</span>
-                        <span class="summary-value gradient-text" id="totalIPK">0.00</span>
-                    </div>
-                </div>
-                <div class="summary-item shine-effect">
-                    <div class="summary-icon">
-                        <i class="fa-solid fa-book"></i>
-                    </div>
-                    <div class="summary-content">
-                        <span class="summary-label">Total SKS</span>
-                        <span class="summary-value" id="totalSKS">0</span>
-                    </div>
-                </div>
-                <div class="summary-item shine-effect">
-                    <div class="summary-icon">
-                        <i class="fa-solid fa-calendar"></i>
-                    </div>
-                    <div class="summary-content">
-                        <span class="summary-label">Total Semester</span>
-                        <span class="summary-value" id="totalSemesters">0</span>
-                    </div>
-                </div>
-                <div class="summary-item shine-effect">
-                    <div class="summary-icon">
-                        <i class="fa-solid fa-trophy"></i>
-                    </div>
-                    <div class="summary-content">
-                        <span class="summary-label">Predikat</span>
-                        <span class="summary-value" id="predikat">-</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
 
-        <!-- Quick Stats Dashboard -->
-        <div id="quickStats" class="quick-stats-card glass-effect glow-card" style="display: none;">
-            <div class="stats-header">
-                <h2>📈 Quick Stats</h2>
-                <button onclick="toggleQuickStats()" class="btn-close-stats">×</button>
+            <!-- Hero Section / Academic Summary Header -->
+            <header class="hero-section">
+                <div class="hero-text-block">
+                    <h1 class="hero-title">Academic Overview</h1>
+                    <p class="hero-subtitle">Track your academic progress semester by semester.</p>
+                </div>
+                <div class="hero-actions">
+                    <button onclick="showOverallAI()" class="btn-primary">
+                        <i class="fa-solid fa-brain"></i> AI Academic Advisor
+                    </button>
+                </div>
+            </header>
+
+            <!-- KPI Cards Grid -->
+            <section class="kpi-grid">
+                <!-- IPK Card (Dominant) -->
+                <div class="kpi-card kpi-card-gpa">
+                    <div class="kpi-card-header">
+                        <span class="kpi-label">Current GPA</span>
+                        <div class="kpi-badge" id="gpaStatusBadge">Good</div>
+                    </div>
+                    <div class="kpi-value-wrapper">
+                        <span class="kpi-value gpa-value" id="totalIPK">0.00</span>
+                        <span class="gpa-scale">/ 4.00</span>
+                    </div>
+                    <div class="kpi-footer">
+                        <span class="kpi-status-text" id="predikat">—</span>
+                    </div>
+                </div>
+
+                <!-- Total SKS Card -->
+                <div class="kpi-card">
+                    <div class="kpi-card-header">
+                        <span class="kpi-label">Credits Earned</span>
+                        <div class="kpi-icon"><i class="fa-solid fa-book-bookmark"></i></div>
+                    </div>
+                    <div class="kpi-value-wrapper">
+                        <span class="kpi-value" id="totalSKS">0</span>
+                        <span class="kpi-unit">SKS</span>
+                    </div>
+                    <div class="kpi-footer">
+                        <span class="kpi-subtext">Total bobot SKS terdaftar</span>
+                    </div>
+                </div>
+
+                <!-- Completed Semesters Card -->
+                <div class="kpi-card">
+                    <div class="kpi-card-header">
+                        <span class="kpi-label">Semesters completed</span>
+                        <div class="kpi-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                    </div>
+                    <div class="kpi-value-wrapper">
+                        <span class="kpi-value" id="totalSemesters">0</span>
+                        <span class="kpi-unit">Sem</span>
+                    </div>
+                    <div class="kpi-footer">
+                        <span class="kpi-subtext">Masa studi berjalan</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Dashboard Panel Layout -->
+            <div class="dashboard-layout">
+                <!-- Left/Main Column: Analytics Chart & Semester History -->
+                <div class="dashboard-main">
+                    
+                    <!-- Line Chart Card -->
+                    <section class="dashboard-card chart-card">
+                        <div class="card-header">
+                            <h2 class="card-title">IPK Progression</h2>
+                            <p class="card-subtitle">Grafik perkembangan indeks prestasi dari waktu ke waktu</p>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="ipChartDashboard"></canvas>
+                        </div>
+                    </section>
+
+                    <!-- Semester History section -->
+                    <section class="semester-history-section">
+                        <div class="section-header-row">
+                            <div>
+                                <h2 class="section-title">Semester History</h2>
+                                <p class="section-subtitle">Daftar kelas dan transkrip nilai per semester</p>
+                            </div>
+                            <button onclick="addSemester()" class="btn-outline">
+                                <i class="fa-solid fa-plus"></i> Add Semester
+                            </button>
+                        </div>
+
+                        <!-- Semesters List Container -->
+                        <div id="semestersList" class="semester-cards-grid"></div>
+
+                        <!-- Empty State Container -->
+                        <div id="emptyState" class="empty-state-card" style="display: none;">
+                            <div class="empty-state-icon">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </div>
+                            <h3 class="empty-state-title">No academic data yet</h3>
+                            <p class="empty-state-desc">Tambahkan semester pertama Anda untuk mulai melacak nilai mata kuliah dan perkembangan IPK.</p>
+                            <button onclick="addSemester()" class="btn-primary" style="margin-top: var(--sp-4);">
+                                <i class="fa-solid fa-plus"></i> Add First Semester
+                            </button>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right/Sidebar Column: Quick Stats -->
+                <aside class="dashboard-sidebar">
+                    <section class="dashboard-card sidebar-card stats-sidebar-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Quick Stats</h2>
+                            <p class="card-subtitle">Ringkasan analitik studi Anda</p>
+                        </div>
+                        <div class="sidebar-stats-list">
+                            <div class="sidebar-stat-item">
+                                <div class="stat-meta">
+                                    <span class="stat-label">IP Semester Tertinggi</span>
+                                    <span class="stat-detail" id="highestIPLabel">Semester —</span>
+                                </div>
+                                <span class="stat-highlight-val" id="highestIP">0.00</span>
+                            </div>
+                            <div class="sidebar-stat-item">
+                                <div class="stat-meta">
+                                    <span class="stat-label">IP Semester Terendah</span>
+                                    <span class="stat-detail" id="lowestIPLabel">Semester —</span>
+                                </div>
+                                <span class="stat-highlight-val text-danger" id="lowestIP">0.00</span>
+                            </div>
+                            <div class="sidebar-stat-item">
+                                <div class="stat-meta">
+                                    <span class="stat-label">Rata-rata Semester</span>
+                                    <span class="stat-detail">Rerata IPS berjalan</span>
+                                </div>
+                                <span class="stat-highlight-val text-primary" id="avgIP">0.00</span>
+                            </div>
+                            <div class="sidebar-stat-item">
+                                <div class="stat-meta">
+                                    <span class="stat-label">Mata Kuliah Predikat A</span>
+                                    <span class="stat-detail" id="totalAPercent">0% dari total MK</span>
+                                </div>
+                                <span class="stat-highlight-val text-success" id="totalA">0</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Modal / Tool Tips Sidebar Card -->
+                    <section class="dashboard-card sidebar-card advisor-teaser-card">
+                        <div class="teaser-icon"><i class="fa-solid fa-user-tie"></i></div>
+                        <h3 class="teaser-title">Academic Advisor</h3>
+                        <p class="teaser-desc">Dapatkan rekomendasi studi otomatis, analisis trend kelulusan, dan review transkrip menggunakan AI Academic Advisor.</p>
+                        <button onclick="showOverallAI()" class="btn-outline-primary btn-full">
+                            Tampilkan Analisis
+                        </button>
+                    </section>
+                </aside>
             </div>
-            <div class="stats-grid-quick">
-                <div class="stat-quick">
-                    <div class="stat-icon">🎯</div>
-                    <div class="stat-content">
-                        <span class="stat-label">IP Tertinggi</span>
-                        <span class="stat-value" id="highestIP">-</span>
-                    </div>
-                </div>
-                <div class="stat-quick">
-                    <div class="stat-icon">📉</div>
-                    <div class="stat-content">
-                        <span class="stat-label">IP Terendah</span>
-                        <span class="stat-value" id="lowestIP">-</span>
-                    </div>
-                </div>
-                <div class="stat-quick">
-                    <div class="stat-icon">📊</div>
-                    <div class="stat-content">
-                        <span class="stat-label">IP Rata-rata</span>
-                        <span class="stat-value" id="avgIP">-</span>
-                    </div>
-                </div>
-                <div class="stat-quick">
-                    <div class="stat-icon">⭐</div>
-                    <div class="stat-content">
-                        <span class="stat-label">Total Nilai A</span>
-                        <span class="stat-value" id="totalA">-</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Add Semester Button -->
-        <div class="add-semester-section">
-            <button onclick="addSemester()" class="btn-add-semester ripple-effect">
-                <i class="fa-solid fa-plus rotate-on-hover"></i>
-                Tambah Semester Baru
-            </button>
-            <button onclick="toggleQuickStats()" class="btn-show-stats">
-                <i class="fa-solid fa-chart-simple"></i>
-                Quick Stats
-            </button>
         </div>
+    </main>
 
-        <!-- Semesters List -->
-        <div id="semestersList"></div>
-
-        <!-- Empty State -->
-        <div id="emptyState" class="empty-state">
-            <i class="fa-solid fa-inbox"></i>
-            <h3>Belum Ada Data</h3>
-            <p>Klik tombol "Tambah Semester Baru" untuk mulai menghitung IPK kamu!</p>
-        </div>
-    </div>
+    <!-- ============================================
+         MODALS
+         ============================================ -->
 
     <!-- Add Course Modal -->
     <div id="courseModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Tambah Mata Kuliah</h3>
-                <button onclick="closeCourseModal()" class="btn-close">×</button>
+                <button onclick="closeCourseModal()" class="btn-close" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Nama Mata Kuliah</label>
-                    <input type="text" id="courseName" placeholder="e.g., Kalkulus I">
+                    <label for="courseName">Nama Mata Kuliah</label>
+                    <input type="text" id="courseName" placeholder="Contoh: Kalkulus Struktur Data II">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>SKS</label>
+                        <label for="courseSKS">SKS (Bobot SKS)</label>
                         <input type="number" id="courseSKS" min="1" max="6" placeholder="3">
                     </div>
                     <div class="form-group">
-                        <label>Nilai</label>
+                        <label for="courseGrade">Nilai Huruf</label>
                         <select id="courseGrade">
-                            <option value="">Pilih Nilai</option>
+                            <option value="">Pilih Nilai...</option>
                             <option value="4.0">A (4.0)</option>
                             <option value="3.7">A- (3.7)</option>
                             <option value="3.3">B+ (3.3)</option>
@@ -189,102 +259,34 @@
             </div>
             <div class="modal-footer">
                 <button onclick="closeCourseModal()" class="btn-secondary">Batal</button>
-                <button onclick="saveCourse()" class="btn-primary">Simpan</button>
+                <button onclick="saveCourse()" class="btn-primary">Simpan Kelas</button>
             </div>
         </div>
     </div>
 
-    <!-- Charts Modal -->
-    <div id="chartsModal" class="modal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-chart-line"></i> Progress Charts</h3>
-                <button onclick="closeChartsModal()" class="btn-close">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="chart-container">
-                    <canvas id="ipChart"></canvas>
-                </div>
-                <div class="chart-container" style="margin-top: 30px;">
-                    <canvas id="gradeChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Achievements Modal -->
-    <div id="achievementsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-trophy"></i> Achievements</h3>
-                <button onclick="closeAchievementsModal()" class="btn-close">×</button>
-            </div>
-            <div class="modal-body">
-                <div id="achievementsList"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Share Card Modal -->
-    <div id="shareModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-share-nodes"></i> Share Your Progress</h3>
-                <button onclick="closeShareModal()" class="btn-close">×</button>
-            </div>
-            <div class="modal-body">
-                <div id="shareCard" class="share-card"></div>
-                <div class="share-buttons">
-                    <button onclick="downloadShareCard()" class="btn-primary">
-                        <i class="fa-solid fa-download"></i> Download Image
-                    </button>
-                    <button onclick="copyShareText()" class="btn-secondary">
-                        <i class="fa-solid fa-copy"></i> Copy Text
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Overall AI Analysis Modal -->
-    <div id="overallAIModal" class="modal">
-        <div class="modal-content modal-xl">
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-brain"></i> AI Complete Analysis & Recommendations</h3>
-                <button onclick="closeOverallAIModal()" class="btn-close">×</button>
-            </div>
-            <div class="modal-body">
-                <div id="overallAIContent"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Confetti Container -->
-    <canvas id="confetti" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;"></canvas>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="script.js"></script>
+    <!-- Edit Course Modal -->
     <div id="editCourseModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Edit Mata Kuliah</h3>
-                <button onclick="closeEditCourseModal()" class="btn-close">×</button>
+                <h3>Ubah Mata Kuliah</h3>
+                <button onclick="closeEditCourseModal()" class="btn-close" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Nama Mata Kuliah</label>
-                    <input type="text" id="editCourseName" placeholder="e.g., Kalkulus I">
+                    <label for="editCourseName">Nama Mata Kuliah</label>
+                    <input type="text" id="editCourseName" placeholder="Contoh: Kalkulus II">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>SKS</label>
+                        <label for="editCourseSKS">SKS</label>
                         <input type="number" id="editCourseSKS" min="1" max="6" placeholder="3">
                     </div>
                     <div class="form-group">
-                        <label>Nilai</label>
+                        <label for="editCourseGrade">Nilai Huruf</label>
                         <select id="editCourseGrade">
-                            <option value="">Pilih Nilai</option>
+                            <option value="">Pilih Nilai...</option>
                             <option value="4.0">A (4.0)</option>
                             <option value="3.7">A- (3.7)</option>
                             <option value="3.3">B+ (3.3)</option>
@@ -302,7 +304,7 @@
             </div>
             <div class="modal-footer">
                 <button onclick="closeEditCourseModal()" class="btn-secondary">Batal</button>
-                <button onclick="saveEditCourse()" class="btn-primary">Simpan</button>
+                <button onclick="saveEditCourse()" class="btn-primary">Update Nilai</button>
             </div>
         </div>
     </div>
@@ -311,30 +313,91 @@
     <div id="notesModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Catatan Semester <span id="notesSemesterNum"></span></h3>
-                <button onclick="closeNotesModal()" class="btn-close">×</button>
+                <h3>Semester Notes — Sem <span id="notesSemesterNum"></span></h3>
+                <button onclick="closeNotesModal()" class="btn-close" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>📝 Catatan</label>
-                    <textarea id="semesterNote" rows="4" placeholder="Tulis catatan tentang semester ini..."></textarea>
+                    <label for="semesterNote">Catatan Belajar / Evaluasi</label>
+                    <textarea id="semesterNote" rows="3" placeholder="Tuliskan catatan atau refleksi belajar semester ini..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label>🏷️ Tags (pisahkan dengan koma)</label>
-                    <input type="text" id="semesterTags" placeholder="produktif, organisasi, challenging">
+                    <label for="semesterTags">Tags / Kategori <span class="label-hint">(dipisahkan koma)</span></label>
+                    <input type="text" id="semesterTags" placeholder="Contoh: sulit, lulus, praktikum">
                 </div>
                 <div class="form-group">
-                    <label>💡 Lesson Learned</label>
-                    <textarea id="semesterLesson" rows="3" placeholder="Apa yang dipelajari dari semester ini?"></textarea>
+                    <label for="semesterLesson">Pelajaran Utama (Lesson Learned)</label>
+                    <textarea id="semesterLesson" rows="2" placeholder="Apa lesson learned terpenting di semester ini?"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
                 <button onclick="closeNotesModal()" class="btn-secondary">Batal</button>
-                <button onclick="saveSemesterNotes()" class="btn-primary">Simpan</button>
+                <button onclick="saveSemesterNotes()" class="btn-primary">Simpan Catatan</button>
             </div>
         </div>
     </div>
 
+    <!-- Achievements Modal -->
+    <div id="achievementsModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-trophy"></i> Piagam & Pencapaian</h3>
+                <button onclick="closeAchievementsModal()" class="btn-close" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="achievementsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Card Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-arrow-up-from-bracket"></i> Bagikan Progress</h3>
+                <button onclick="closeShareModal()" class="btn-close" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="shareCard" class="share-card"></div>
+                <div class="share-buttons">
+                    <button onclick="downloadShareCard()" class="btn-primary">
+                        <i class="fa-solid fa-download"></i> Unduh Gambar
+                    </button>
+                    <button onclick="copyShareText()" class="btn-secondary">
+                        <i class="fa-solid fa-copy"></i> Salin Teks
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overall AI Analysis Modal -->
+    <div id="overallAIModal" class="modal">
+        <div class="modal-content modal-xl">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-brain"></i> AI Academic Advisor</h3>
+                <button onclick="closeOverallAIModal()" class="btn-close" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="overallAIContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; display: none;"></canvas>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
