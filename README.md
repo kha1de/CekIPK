@@ -6,20 +6,18 @@
 
 ## ✨ Fitur
 
-- **Perhitungan IPK & IP Semester** — Kalkulasi otomatis berdasarkan nilai dan SKS setiap mata kuliah
-- **Pengelolaan Semester** — Tambah, hapus, dan kelola data per semester secara terstruktur
-- **Pengelolaan Mata Kuliah** — Tambah, edit, dan hapus mata kuliah beserta nilai dan jumlah SKS
-- **Grafik Perkembangan IPK** — Visualisasi tren IPK antar-semester menggunakan Chart.js, langsung di dashboard
-- **Grafik Detail** — Modal visualisasi tambahan berisi grafik IP semester, distribusi nilai, dan tren SKS
-- **Statistik Akademik** — Ringkasan cepat: total SKS, mata kuliah terbaik, mata kuliah terendah, dan tren terkini
-- **Analisis AI per Semester** — Analisis otomatis berbasis data untuk setiap semester
-- **Analisis AI Keseluruhan** — Ringkasan akademik menyeluruh, prediksi IPK akhir, dan rekomendasi
-- **Catatan Semester** — Tambah catatan, *lesson learned*, dan tag per semester
-- **Achievements** — Sistem pencapaian & medali berdasarkan progres akademik
-- **Share Card** — Buat kartu ringkasan akademik yang dapat dibagikan sebagai gambar
-- **Export PDF** — Unduh transkrip akademik dalam format PDF
-- **Dark Mode** — Tampilan gelap yang dapat diaktifkan kapan saja
-- **Penyimpanan Lokal** — Semua data tersimpan di `localStorage` browser, tanpa server
+- **Perhitungan IPK & IP Semester** — Kalkulasi otomatis berbasis bobot nilai dan SKS tiap mata kuliah
+- **Pengelolaan Semester** — Tambah, hapus, dan kelola transkrip per semester secara terstruktur
+- **Pengelolaan Mata Kuliah** — Tambah, edit nilai, dan hapus mata kuliah dengan bobot SKS fleksibel
+- **Grafik Perkembangan IPK** — Visualisasi tren perkembangan IPK antar-semester langsung di dashboard
+- **Visualisasi Grafik Lengkap** — Modal analisis berisi grafik IP per semester dan distribusi perolehan nilai
+- **Statistik Akademik Cepat** — Ringkasan analitik: IP tertinggi, IP terendah, rerata semester, dan persentase nilai A
+- **Catatan & Refleksi Semester** — Tambah catatan belajar, *lesson learned*, dan tag kategori per semester
+- **Achievements & Piagam** — Sistem medali dan pencapaian akademik otomatis berbasis progres studi
+- **Share Card Visual** — Buat kartu ringkasan progres akademik yang dapat diunduh sebagai gambar
+- **Export Transkrip** — Unduh transkrip nilai akademik lengkap dalam format teks
+- **Dark Mode & Light Mode** — Tema visual modern yang dapat diganti kapan saja
+- **Penyimpanan Lokal (Offline)** — Seluruh data tersimpan otomatis di `localStorage` browser tanpa perlu login/server
 
 ---
 
@@ -50,7 +48,7 @@ Mahasiswa sering kali hanya melihat IPK kumulatif di akhir semester tanpa memaha
 3. Sistem menghitung IP semester secara otomatis menggunakan bobot nilai × SKS.
 4. Data tersimpan otomatis di `localStorage` browser.
 5. Dashboard menampilkan IPK kumulatif terkini, grafik tren, dan statistik akademik secara real-time.
-6. Pengguna dapat melihat analisis AI, membuka grafik detail, mengunduh transkrip PDF, atau membagikan kartu ringkasan akademik.
+6. Pengguna dapat membuka visualisasi grafik lengkap, melihat pencapaian piagam, mengunduh transkrip nilai, atau membagikan kartu ringkasan akademik.
 
 ---
 

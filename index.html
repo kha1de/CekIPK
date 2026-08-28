@@ -24,28 +24,8 @@
                 </div>
             </div>
             <div class="nav-actions">
-                <button onclick="toggleTheme()" class="btn-nav" title="Ubah Tema">
+                <button onclick="toggleTheme()" class="btn-theme-toggle" id="themeToggleBtn" title="Ubah Tema" aria-label="Ubah Tema">
                     <i id="themeIcon" class="fa-solid fa-moon"></i>
-                </button>
-                <button onclick="showCharts()" class="btn-nav" title="Visualisasi Detil">
-                    <i class="fa-solid fa-chart-column"></i>
-                    <span>Detail Charts</span>
-                </button>
-                <button onclick="showAchievements()" class="btn-nav" title="Pencapaian & Medali">
-                    <i class="fa-solid fa-trophy"></i>
-                    <span>Achievements</span>
-                </button>
-                <button onclick="showShareCard()" class="btn-nav" title="Bagikan Progress">
-                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
-                    <span>Share Card</span>
-                </button>
-                <button onclick="exportPDF()" class="btn-nav" title="Export Transkrip">
-                    <i class="fa-solid fa-file-pdf"></i>
-                    <span>Export PDF</span>
-                </button>
-                <div class="nav-divider"></div>
-                <button onclick="resetAll()" class="btn-nav btn-nav-danger" title="Reset Semua Data">
-                    <i class="fa-solid fa-trash-can"></i>
                 </button>
             </div>
         </div>
@@ -62,8 +42,11 @@
                     <p class="hero-subtitle">Track your academic progress semester by semester.</p>
                 </div>
                 <div class="hero-actions">
-                    <button onclick="showOverallAI()" class="btn-primary">
-                        <i class="fa-solid fa-brain"></i> AI Academic Advisor
+                    <button onclick="showShareCard()" class="btn-primary" title="Bagikan Ringkasan IPK">
+                        <i class="fa-solid fa-arrow-up-from-bracket"></i> Share Card
+                    </button>
+                    <button onclick="exportPDF()" class="btn-outline" title="Export Transkrip Teks">
+                        <i class="fa-solid fa-file-arrow-down"></i> Export Transkrip
                     </button>
                 </div>
             </header>
@@ -123,9 +106,14 @@
                     
                     <!-- Line Chart Card -->
                     <section class="dashboard-card chart-card">
-                        <div class="card-header">
-                            <h2 class="card-title">IPK Progression</h2>
-                            <p class="card-subtitle">Grafik perkembangan indeks prestasi dari waktu ke waktu</p>
+                        <div class="card-header card-header-flex">
+                            <div>
+                                <h2 class="card-title">IPK Progression</h2>
+                                <p class="card-subtitle">Grafik perkembangan indeks prestasi dari waktu ke waktu</p>
+                            </div>
+                            <button onclick="showCharts()" class="btn-small btn-outline" title="Lihat Grafik Lengkap">
+                                <i class="fa-solid fa-chart-column"></i> Detail Charts
+                            </button>
                         </div>
                         <div class="chart-wrapper">
                             <canvas id="ipChartDashboard"></canvas>
@@ -161,8 +149,9 @@
                     </section>
                 </div>
 
-                <!-- Right/Sidebar Column: Quick Stats -->
+                <!-- Right/Sidebar Column: Quick Stats & Tools -->
                 <aside class="dashboard-sidebar">
+                    <!-- Quick Stats Card -->
                     <section class="dashboard-card sidebar-card stats-sidebar-card">
                         <div class="card-header">
                             <h2 class="card-title">Quick Stats</h2>
@@ -200,17 +189,65 @@
                         </div>
                     </section>
 
-                    <!-- Modal / Tool Tips Sidebar Card -->
-                    <section class="dashboard-card sidebar-card advisor-teaser-card">
-                        <div class="teaser-icon"><i class="fa-solid fa-user-tie"></i></div>
-                        <h3 class="teaser-title">Academic Advisor</h3>
-                        <p class="teaser-desc">Dapatkan rekomendasi studi otomatis, analisis trend kelulusan, dan review transkrip menggunakan AI Academic Advisor.</p>
-                        <button onclick="showOverallAI()" class="btn-outline-primary btn-full">
-                            Tampilkan Analisis
+                    <!-- Academic Tools & Features Card -->
+                    <section class="dashboard-card sidebar-card tools-sidebar-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Fitur & Pencapaian</h2>
+                            <p class="card-subtitle">Akses cepat menu akademik</p>
+                        </div>
+                        <div class="sidebar-tools-list">
+                            <button onclick="showAchievements()" class="sidebar-tool-btn">
+                                <div class="tool-btn-icon trophy"><i class="fa-solid fa-trophy"></i></div>
+                                <div class="tool-btn-info">
+                                    <span class="tool-btn-title">Achievements</span>
+                                    <span class="tool-btn-desc">Piagam & medali pencapaian</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right tool-btn-arrow"></i>
+                            </button>
+                            <button onclick="showCharts()" class="sidebar-tool-btn">
+                                <div class="tool-btn-icon chart"><i class="fa-solid fa-chart-pie"></i></div>
+                                <div class="tool-btn-info">
+                                    <span class="tool-btn-title">Detail Charts</span>
+                                    <span class="tool-btn-desc">Visualisasi grafik lengkap</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right tool-btn-arrow"></i>
+                            </button>
+                            <button onclick="exportPDF()" class="sidebar-tool-btn">
+                                <div class="tool-btn-icon export"><i class="fa-solid fa-file-arrow-down"></i></div>
+                                <div class="tool-btn-info">
+                                    <span class="tool-btn-title">Export Transkrip</span>
+                                    <span class="tool-btn-desc">Download transkrip nilai</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right tool-btn-arrow"></i>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Share Card Teaser Card (in former advisor card area) -->
+                    <section class="dashboard-card sidebar-card share-teaser-card">
+                        <div class="teaser-icon"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
+                        <h3 class="teaser-title">Share Progress</h3>
+                        <p class="teaser-desc">Bagikan pencapaian akademik dan riwayat IPK Anda dalam format kartu visual yang elegan.</p>
+                        <button onclick="showShareCard()" class="btn-primary btn-full">
+                            <i class="fa-solid fa-share-nodes"></i> Buka Share Card
                         </button>
                     </section>
+
                 </aside>
             </div>
+
+            <!-- Dashboard Footer / Danger Zone Data Management -->
+            <section class="dashboard-footer-bar">
+                <div class="footer-data-info">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Data akademik tersimpan secara lokal di browser perangkat Anda.</span>
+                </div>
+                <div class="footer-danger-action">
+                    <button onclick="resetAll()" class="btn-danger-subtle" title="Reset Semua Data Semester">
+                        <i class="fa-solid fa-trash-can"></i> Reset Semua Data
+                    </button>
+                </div>
+            </section>
 
         </div>
     </main>
@@ -218,6 +255,38 @@
     <!-- ============================================
          MODALS
          ============================================ -->
+
+    <!-- Detail Charts Modal -->
+    <div id="chartsModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-chart-pie"></i> Visualisasi & Analisis Grafik</h3>
+                <button onclick="closeChartsModal()" class="btn-close" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-charts-grid" style="display: flex; flex-direction: column; gap: var(--sp-6);">
+                    <div class="dashboard-card" style="padding: var(--sp-4);">
+                        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: var(--sp-3); color: var(--text-primary);">
+                            <i class="fa-solid fa-chart-line"></i> IP Progress per Semester
+                        </h4>
+                        <div style="height: 260px; position: relative;">
+                            <canvas id="ipChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="dashboard-card" style="padding: var(--sp-4);">
+                        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: var(--sp-3); color: var(--text-primary);">
+                            <i class="fa-solid fa-chart-column"></i> Distribusi Nilai per Semester
+                        </h4>
+                        <div style="height: 260px; position: relative;">
+                            <canvas id="gradeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Add Course Modal -->
     <div id="courseModal" class="modal">
@@ -377,20 +446,7 @@
         </div>
     </div>
 
-    <!-- Overall AI Analysis Modal -->
-    <div id="overallAIModal" class="modal">
-        <div class="modal-content modal-xl">
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-brain"></i> AI Academic Advisor</h3>
-                <button onclick="closeOverallAIModal()" class="btn-close" aria-label="Close">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="overallAIContent"></div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Confetti Canvas -->
     <canvas id="confetti" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; display: none;"></canvas>
