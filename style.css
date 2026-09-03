@@ -166,27 +166,6 @@ h1, h2, h3, h4, .brand-name, .kpi-value, .stat-highlight-val {
     gap: var(--sp-2);
 }
 
-.btn-theme-toggle {
-    background-color: var(--bg-main);
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-    width: 38px;
-    height: 38px;
-    border-radius: var(--r-full);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-}
-
-.btn-theme-toggle:hover {
-    background-color: var(--accent-light);
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: rotate(15deg);
-}
 
 /* =========================================================
    HERO / ACADEMIC OVERVIEW
@@ -1457,84 +1436,4 @@ h1, h2, h3, h4, .brand-name, .kpi-value, .stat-highlight-val {
     .semester-details-content {
         display: block !important;
     }
-}
-
-/* =========================================================
-   DARK THEME OVERLAYS
-   ========================================================= */
-[data-theme="dark"] {
-    --bg-main:         #0F172A; /* slate-900 */
-    --bg-surface:      #1E293B; /* slate-800 */
-    --border-color:    #334155; /* slate-700 */
-    --border-hover:    #475569;
-    
-    --text-primary:    #F8FAFC; /* slate-50 */
-    --text-secondary:  #94A3B8; /* slate-400 */
-    --text-muted:      #64748B; /* slate-500 */
-    
-    --accent:          #3B82F6; /* vivid blue in dark mode */
-    --accent-light:    #1E3A8A; /* dark navy */
-    --accent-hover:    #60A5FA;
-    
-    --success-light:   #064E3B;
-    --success:         #34D399;
-    
-    --warning-light:   #7C2D12;
-    --warning:         #FDBA74;
-    
-    --danger-light:    #7F1D1D;
-    --danger:          #FCA5A5;
-    
-    --info-light:      #1E3A8A;
-    --info:            #93C5FD;
-}
-
-[data-theme="dark"] .kpi-footer {
-    border-top-color: #334155;
-}
-
-[data-theme="dark"] .semester-details-content {
-    border-top-color: #334155;
-}
-
-[data-theme="dark"] .courses-table td {
-    border-bottom-color: #334155;
-}
-
-[data-theme="dark"] .btn-close:hover {
-    background-color: #334155;
-}
-
-[data-theme="dark"] .btn-secondary {
-    background-color: #334155;
-    color: var(--text-primary);
-    border-color: #475569;
-}
-
-[data-theme="dark"] .btn-secondary:hover {
-    background-color: #475569;
-}
-
-[data-theme="dark"] .modal-footer {
-    background-color: #1E293B;
-    border-top-color: #334155;
-}
-
-[data-theme="dark"] .tool-btn-icon.trophy {
-    background-color: rgba(217, 119, 6, 0.2);
-    color: #FBBF24;
-}
-
-[data-theme="dark"] .tool-btn-icon.chart {
-    background-color: rgba(79, 70, 229, 0.25);
-    color: #818CF8;
-}
-
-[data-theme="dark"] .tool-btn-icon.export {
-    background-color: rgba(22, 163, 74, 0.2);
-    color: #4ADE80;
-}
-
-[data-theme="dark"] .share-teaser-card {
-    background: linear-gradient(135deg, #1E293B 0%, rgba(30, 58, 138, 0.35) 100%);
 }

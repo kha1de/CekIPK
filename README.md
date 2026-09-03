@@ -16,7 +16,6 @@
 - **Achievements & Piagam** — Sistem medali dan pencapaian akademik otomatis berbasis progres studi
 - **Share Card Visual** — Buat kartu ringkasan progres akademik yang dapat diunduh sebagai gambar
 - **Export Transkrip** — Unduh transkrip nilai akademik lengkap dalam format teks
-- **Dark Mode & Light Mode** — Tema visual modern yang dapat diganti kapan saja
 - **Penyimpanan Lokal (Offline)** — Seluruh data tersimpan otomatis di `localStorage` browser tanpa perlu login/server
 
 ---

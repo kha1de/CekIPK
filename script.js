@@ -21,9 +21,10 @@ const gradeMap = {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    localStorage.removeItem('ipk_theme');
+    document.documentElement.removeAttribute('data-theme');
     loadData();
     render();
-    checkTheme();
 });
 
 // Load data from localStorage
@@ -471,23 +472,6 @@ function renderSemesters() {
 }
 
 
-// Theme toggle
-function toggleTheme() {
-    const html = document.documentElement;
-    const current = html.getAttribute('data-theme') || 'light';
-    const next = current === 'light' ? 'dark' : 'light';
-    html.setAttribute('data-theme', next);
-    localStorage.setItem('ipk_theme', next);
-    const icon = document.getElementById('themeIcon');
-    if (icon) icon.className = next === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-}
-
-function checkTheme() {
-    const saved = localStorage.getItem('ipk_theme') || 'light';
-    document.documentElement.setAttribute('data-theme', saved);
-    const icon = document.getElementById('themeIcon');
-    if (icon) icon.className = saved === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-}
 
 // Export PDF
 function exportPDF() {
